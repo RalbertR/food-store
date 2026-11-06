@@ -14,7 +14,7 @@ class BaseRepository(Generic[T]):
         return self.session.get(self.model, entity_id)
 
     def get_all(self) -> list[T]:
-        return list(self.session.exec(select(self.model)).all())
+        return list(self.session.exec(select(self.model).order_by(self.model.id)).all())
 
     def add(self, entity: T) -> T:
         self.session.add(entity)
