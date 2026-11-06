@@ -7,7 +7,7 @@ class CategoriaCreate(SQLModel):
 
 
 class CategoriaUpdate(SQLModel):
-    nombre: str | None = Field(default=None, min_length=2, max_length=100)
+    nombre: str = Field(default=None, min_length=2, max_length=100)
     descripcion: str | None = None
 
 
