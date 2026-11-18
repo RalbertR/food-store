@@ -1,0 +1,77 @@
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { useAuth } from '@/features/auth'
+import { useThemeStore } from '@/store/themeStore'
+
+interface NavbarProps {
+  nombreApp: string
+}
+
+const estiloLink =
+  'text-sm font-semibold text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400'
+
+export const Navbar = ({ nombreApp }: NavbarProps) => {
+  const { user, esAdmin, logout } = useAuth()
+  const darkMode = useThemeStore((state) => state.darkMode)
+  const toggleTheme = useThemeStore((state) => state.toggleTheme)
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode)
+  }, [darkMode])
+
+  return (
+    <header className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+      <nav className="mx-auto flex h-16 max-w-4xl items-center gap-5 px-4">
+        <span className="whitespace-nowrap text-lg font-bold text-blue-600 dark:text-blue-400">
+          {nombreApp}
+        </span>
+        {user && (
+          <>
+            <Link to="/categories" className={estiloLink}>
+              Categorías
+            </Link>
+            <Link to="/products" className={estiloLink}>
+              Productos
+            </Link>
+            <Link to="/ingredients" className={estiloLink}>
+              Ingredientes
+            </Link>
+            {esAdmin && (
+              <Link to="/admin/users" className={estiloLink}>
+                Usuarios
+              </Link>
+            )}
+          </>
+        )}
+        <div className="ml-auto flex items-center gap-4">
+          {user && (
+            <div className="whitespace-nowrap text-right leading-tight">
+              <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                {user.nombre} {user.apellido}
+              </p>
+              <p className="text-xs text-blue-700 dark:text-blue-400">{user.roles.join(', ')}</p>
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label="Cambiar tema"
+            title="Cambiar tema"
+            className="rounded-lg bg-gray-100 px-2.5 py-1.5 text-sm text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+          >
+            {darkMode ? '☀' : '☾'}
+          </button>
+          {user && (
+            <button
+              type="button"
+              onClick={logout}
+              className="whitespace-nowrap rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+            >
+              Cerrar sesión
+            </button>
+          )}
+        </div>
+      </nav>
+    </header>
+  )
+}
