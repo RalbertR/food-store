@@ -1,7 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AdminUsersPage, LoginPage, RegisterPage } from '@/features/auth'
 import { CategoriesPage } from '@/features/categories'
-import { IngredientsPage } from '@/features/ingredients'
 import { ProductsPage } from '@/features/products'
 import { Navbar } from '@/shared/components/Navbar'
 import { UnauthorizedPage } from '@/shared/components/UnauthorizedPage'
@@ -10,7 +9,7 @@ import { ProtectedRoute } from './ProtectedRoute'
 export const AppRouter = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Navbar nombreApp="Gestor de Catálogo" />
+      <Navbar nombreApp="Food Store" />
 
       <main className="mx-auto max-w-4xl px-4 py-8">
         <Routes>
@@ -21,7 +20,6 @@ export const AppRouter = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/categories" element={<CategoriesPage />} />
             <Route path="/products" element={<ProductsPage />} />
-            <Route path="/ingredients" element={<IngredientsPage />} />
           </Route>
 
           <Route element={<ProtectedRoute allowedRoles={['admin']} />}>

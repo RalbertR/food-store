@@ -33,9 +33,6 @@ export const Navbar = ({ nombreApp }: NavbarProps) => {
             <Link to="/products" className={estiloLink}>
               Productos
             </Link>
-            <Link to="/ingredients" className={estiloLink}>
-              Ingredientes
-            </Link>
             {esAdmin && (
               <Link to="/admin/users" className={estiloLink}>
                 Usuarios

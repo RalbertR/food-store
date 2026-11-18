@@ -3,7 +3,7 @@ import { useAuthStore } from '@/features/auth'
 import { useNotificationStore } from '@/store/notificationStore'
 import { api } from './api'
 
-const RUTAS_DE_AUTH = ['/api/v1/auth/token', '/api/v1/auth/me']
+const RUTAS_DE_AUTH = ['/auth/token', '/auth/me']
 
 const ACCESO_DENEGADO = 'Acceso denegado: no tenés permisos para esta acción'
 
