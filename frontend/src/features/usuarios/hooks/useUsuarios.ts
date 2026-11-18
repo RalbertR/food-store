@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNotificationStore } from '@/store/notificationStore'
-import { activarUsuario, desactivarUsuario, getUsuarios } from '../services/auth.service'
-import type { UsuarioAdmin } from '../types/auth.types'
+import { activarUsuario, desactivarUsuario, getUsuarios } from '../api/usuarios'
+import type { Usuario } from '../types/usuario.types'
 
-export const useUsers = () => {
+export const useUsuarios = () => {
   const queryClient = useQueryClient()
   const showNotification = useNotificationStore((state) => state.showNotification)
 
@@ -13,11 +13,11 @@ export const useUsers = () => {
   })
 
   const cambiarEstado = useMutation({
-    mutationFn: (usuario: UsuarioAdmin) =>
-      usuario.deleted_at ? activarUsuario(usuario.id) : desactivarUsuario(usuario.id),
+    mutationFn: (usuario: Usuario) =>
+      usuario.disabled ? activarUsuario(usuario.id) : desactivarUsuario(usuario.id),
     onSuccess: (usuario) => {
       queryClient.invalidateQueries({ queryKey: ['usuarios'] })
-      showNotification(usuario.deleted_at ? 'Usuario desactivado' : 'Usuario activado')
+      showNotification(usuario.disabled ? 'Usuario desactivado' : 'Usuario activado')
     },
     onError: (error) => showNotification(error.message),
   })

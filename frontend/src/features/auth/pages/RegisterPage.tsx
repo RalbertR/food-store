@@ -5,15 +5,17 @@ import { useAuth } from '../hooks/useAuth'
 import type { RegistroForm } from '../types/auth.types'
 
 const valoresVacios: RegistroForm = {
-  nombre: '',
-  apellido: '',
+  username: '',
+  full_name: '',
   email: '',
-  celular: '',
   password: '',
 }
 
 const obligatorio = ({ value }: { value: string }) =>
   value.trim() ? undefined : 'Este campo es obligatorio'
+
+const emailValido = ({ value }: { value: string }) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? undefined : 'Ingresá un email válido'
 
 export const RegisterPage = () => {
   const { registro } = useAuth()
@@ -45,17 +47,14 @@ export const RegisterPage = () => {
           </p>
         )}
 
-        <form.Field name="nombre" validators={{ onChange: obligatorio }}>
-          {(field) => <CampoTexto field={field} label="Nombre" />}
+        <form.Field name="username" validators={{ onChange: obligatorio }}>
+          {(field) => <CampoTexto field={field} label="Usuario" />}
         </form.Field>
-        <form.Field name="apellido" validators={{ onChange: obligatorio }}>
-          {(field) => <CampoTexto field={field} label="Apellido" />}
+        <form.Field name="full_name" validators={{ onChange: obligatorio }}>
+          {(field) => <CampoTexto field={field} label="Nombre completo" />}
         </form.Field>
-        <form.Field name="email" validators={{ onChange: obligatorio }}>
+        <form.Field name="email" validators={{ onChange: emailValido }}>
           {(field) => <CampoTexto field={field} label="Email" type="email" />}
-        </form.Field>
-        <form.Field name="celular">
-          {(field) => <CampoTexto field={field} label="Celular (opcional)" />}
         </form.Field>
         <form.Field
           name="password"

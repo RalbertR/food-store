@@ -1,9 +1,9 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { AdminUsersPage, LoginPage, RegisterPage } from '@/features/auth'
+import { LoginPage, RegisterPage, UnauthorizedPage } from '@/features/auth'
 import { CategoriesPage } from '@/features/categories'
 import { ProductsPage } from '@/features/products'
+import { AdminUsuariosPage } from '@/features/usuarios'
 import { Navbar } from '@/shared/components/Navbar'
-import { UnauthorizedPage } from '@/shared/components/UnauthorizedPage'
 import { ProtectedRoute } from './ProtectedRoute'
 
 export const AppRouter = () => {
@@ -23,7 +23,7 @@ export const AppRouter = () => {
           </Route>
 
           <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-            <Route path="/admin/users" element={<AdminUsersPage />} />
+            <Route path="/admin/usuarios" element={<AdminUsuariosPage />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/categories" replace />} />

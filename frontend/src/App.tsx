@@ -1,14 +1,14 @@
 import { useEffect } from 'react'
-import { useAuthStore } from '@/features/auth'
 import { AppRouter } from '@/routes/AppRouter'
 import { Toast } from '@/shared/components/Toast'
+import { useAuthStore } from '@/store/authStore'
 
 export const App = () => {
-  const checkAuth = useAuthStore((state) => state.checkAuth)
+  const checkSession = useAuthStore((state) => state.checkSession)
 
   useEffect(() => {
-    checkAuth()
-  }, [checkAuth])
+    checkSession()
+  }, [checkSession])
 
   return (
     <>

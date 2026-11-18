@@ -11,7 +11,7 @@ const estiloLink =
   'text-sm font-semibold text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400'
 
 export const Navbar = ({ nombreApp }: NavbarProps) => {
-  const { user, esAdmin, logout } = useAuth()
+  const { usuario, esAdmin, logout } = useAuth()
   const darkMode = useThemeStore((state) => state.darkMode)
   const toggleTheme = useThemeStore((state) => state.toggleTheme)
 
@@ -25,7 +25,7 @@ export const Navbar = ({ nombreApp }: NavbarProps) => {
         <span className="whitespace-nowrap text-lg font-bold text-blue-600 dark:text-blue-400">
           {nombreApp}
         </span>
-        {user && (
+        {usuario && (
           <>
             <Link to="/categories" className={estiloLink}>
               Categorías
@@ -34,19 +34,19 @@ export const Navbar = ({ nombreApp }: NavbarProps) => {
               Productos
             </Link>
             {esAdmin && (
-              <Link to="/admin/users" className={estiloLink}>
+              <Link to="/admin/usuarios" className={estiloLink}>
                 Usuarios
               </Link>
             )}
           </>
         )}
         <div className="ml-auto flex items-center gap-4">
-          {user && (
+          {usuario && (
             <div className="whitespace-nowrap text-right leading-tight">
               <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                {user.nombre} {user.apellido}
+                {usuario.full_name}
               </p>
-              <p className="text-xs text-blue-700 dark:text-blue-400">{user.roles.join(', ')}</p>
+              <p className="text-xs text-blue-700 dark:text-blue-400">{usuario.role}</p>
             </div>
           )}
           <button
@@ -58,7 +58,7 @@ export const Navbar = ({ nombreApp }: NavbarProps) => {
           >
             {darkMode ? '☀' : '☾'}
           </button>
-          {user && (
+          {usuario && (
             <button
               type="button"
               onClick={logout}

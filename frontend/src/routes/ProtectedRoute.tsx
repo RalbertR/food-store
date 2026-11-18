@@ -1,17 +1,18 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '@/features/auth'
+import type { Rol } from '@/features/usuarios'
 import { EstadoCarga } from '@/shared/components/EstadoCarga'
 
 interface ProtectedRouteProps {
-  allowedRoles?: string[]
+  allowedRoles?: Rol[]
 }
 
 export const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
-  const { user, status } = useAuth()
+  const { usuario, cargando } = useAuth()
 
-  if (status === 'checking') return <EstadoCarga />
-  if (!user) return <Navigate to="/login" replace />
-  if (allowedRoles && !user.roles.some((rol) => allowedRoles.includes(rol))) {
+  if (cargando) return <EstadoCarga />
+  if (!usuario) return <Navigate to="/login" replace />
+  if (allowedRoles && !allowedRoles.includes(usuario.role)) {
     return <Navigate to="/unauthorized" replace />
   }
   return <Outlet />

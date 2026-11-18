@@ -4,10 +4,10 @@ import { CampoTexto } from '@/shared/components/CampoTexto'
 import { useAuth } from '../hooks/useAuth'
 import type { LoginForm } from '../types/auth.types'
 
-const valoresVacios: LoginForm = { email: '', password: '' }
+const valoresVacios: LoginForm = { username: '', password: '' }
 
 export const LoginPage = () => {
-  const { user, login } = useAuth()
+  const { usuario, login } = useAuth()
 
   const form = useForm({
     defaultValues: valoresVacios,
@@ -16,7 +16,7 @@ export const LoginPage = () => {
     },
   })
 
-  if (user) return <Navigate to="/categories" replace />
+  if (usuario) return <Navigate to="/" replace />
 
   return (
     <div className="mx-auto max-w-sm">
@@ -37,12 +37,12 @@ export const LoginPage = () => {
         )}
 
         <form.Field
-          name="email"
+          name="username"
           validators={{
-            onChange: ({ value }) => (value.trim() ? undefined : 'Ingresá tu email'),
+            onChange: ({ value }) => (value.trim() ? undefined : 'Ingresá tu usuario'),
           }}
         >
-          {(field) => <CampoTexto field={field} label="Email" type="email" />}
+          {(field) => <CampoTexto field={field} label="Usuario" />}
         </form.Field>
         <form.Field
           name="password"

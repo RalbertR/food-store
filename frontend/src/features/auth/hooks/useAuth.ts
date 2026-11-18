@@ -1,22 +1,21 @@
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
+import { useAuthStore } from '@/store/authStore'
 import { useNotificationStore } from '@/store/notificationStore'
-import { registrarUsuario } from '../services/auth.service'
-import { useAuthStore } from '../store/authStore'
+import { registrarUsuario } from '../api/auth'
 import type { LoginForm } from '../types/auth.types'
 
 export const useAuth = () => {
-  const user = useAuthStore((state) => state.user)
-  const status = useAuthStore((state) => state.status)
+  const usuario = useAuthStore((state) => state.usuario)
+  const cargando = useAuthStore((state) => state.cargando)
   const iniciar = useAuthStore((state) => state.login)
   const cerrar = useAuthStore((state) => state.logout)
-  const hasRole = useAuthStore((state) => state.hasRole)
   const showNotification = useNotificationStore((state) => state.showNotification)
   const navigate = useNavigate()
 
   const login = useMutation({
-    mutationFn: (datos: LoginForm) => iniciar(datos.email, datos.password),
-    onSuccess: () => navigate('/categories'),
+    mutationFn: (datos: LoginForm) => iniciar(datos.username, datos.password),
+    onSuccess: () => navigate('/'),
   })
 
   const registro = useMutation({
@@ -32,5 +31,5 @@ export const useAuth = () => {
     navigate('/login')
   }
 
-  return { user, status, esAdmin: hasRole('admin'), login, registro, logout }
+  return { usuario, cargando, esAdmin: usuario?.role === 'admin', login, registro, logout }
 }

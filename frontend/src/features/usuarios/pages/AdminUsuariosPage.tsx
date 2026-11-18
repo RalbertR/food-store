@@ -1,13 +1,13 @@
+import { useAuth } from '@/features/auth'
 import { EstadoCarga } from '@/shared/components/EstadoCarga'
 import { EstadoError } from '@/shared/components/EstadoError'
 import { EstadoVacio } from '@/shared/components/EstadoVacio'
 import { UsuariosTabla } from '../components/UsuariosTabla'
-import { useAuth } from '../hooks/useAuth'
-import { useUsers } from '../hooks/useUsers'
+import { useUsuarios } from '../hooks/useUsuarios'
 
-export const AdminUsersPage = () => {
-  const { user } = useAuth()
-  const { usuarios, isPending, isError, refetch, cambiarEstado } = useUsers()
+export const AdminUsuariosPage = () => {
+  const { usuario } = useAuth()
+  const { usuarios, isPending, isError, refetch, cambiarEstado } = useUsuarios()
 
   return (
     <>
@@ -21,9 +21,9 @@ export const AdminUsersPage = () => {
       {usuarios && usuarios.length > 0 && (
         <UsuariosTabla
           usuarios={usuarios}
-          idActual={user?.id}
+          idActual={usuario?.id}
           deshabilitado={cambiarEstado.isPending}
-          onCambiarEstado={(usuario) => cambiarEstado.mutate(usuario)}
+          onCambiarEstado={(fila) => cambiarEstado.mutate(fila)}
         />
       )}
     </>
