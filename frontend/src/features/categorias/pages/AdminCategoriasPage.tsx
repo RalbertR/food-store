@@ -1,20 +1,18 @@
 import { useState } from 'react'
 import { useForm } from '@tanstack/react-form'
-import { useAuth } from '@/features/auth'
 import { CampoTexto } from '@/shared/components/CampoTexto'
 import { EstadoCarga } from '@/shared/components/EstadoCarga'
 import { EstadoError } from '@/shared/components/EstadoError'
 import { EstadoVacio } from '@/shared/components/EstadoVacio'
 import { Modal } from '@/shared/components/Modal'
 import { CategoriasTabla } from '../components/CategoriasTabla'
-import { useCategories } from '../hooks/useCategories'
+import { useCategorias } from '../hooks/useCategorias'
 import type { Categoria, CategoriaForm } from '../types/categoria.types'
 
 const valoresVacios: CategoriaForm = { nombre: '', descripcion: '' }
 
-export const CategoriesPage = () => {
-  const { esAdmin } = useAuth()
-  const { categorias, isPending, isError, refetch, guardar, eliminar } = useCategories()
+export const AdminCategoriasPage = () => {
+  const { categorias, isPending, isError, refetch, guardar, eliminar } = useCategorias()
   const [modalAbierto, setModalAbierto] = useState(false)
   const [seleccionada, setSeleccionada] = useState<Categoria | null>(null)
 
@@ -32,7 +30,9 @@ export const CategoriesPage = () => {
     guardar.reset()
     setSeleccionada(categoria)
     form.reset(
-      categoria ? { nombre: categoria.nombre, descripcion: categoria.descripcion } : valoresVacios,
+      categoria
+        ? { nombre: categoria.nombre, descripcion: categoria.descripcion ?? '' }
+        : valoresVacios,
       { keepDefaultValues: true },
     )
     setModalAbierto(true)
@@ -47,15 +47,13 @@ export const CategoriesPage = () => {
     <>
       <div className="mb-6 flex items-center justify-between gap-4">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Categorías</h1>
-        {esAdmin && (
-          <button
-            type="button"
-            onClick={() => abrirModal(null)}
-            className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-600"
-          >
-            + Nueva categoría
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={() => abrirModal(null)}
+          className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-600"
+        >
+          + Nueva categoría
+        </button>
       </div>
 
       {isPending && <EstadoCarga />}
@@ -66,11 +64,7 @@ export const CategoriesPage = () => {
         <EstadoVacio mensaje="Todavía no hay categorías cargadas." />
       )}
       {categorias && categorias.length > 0 && (
-        <CategoriasTabla
-          categorias={categorias}
-          onEditar={esAdmin ? abrirModal : undefined}
-          onEliminar={esAdmin ? handleDelete : undefined}
-        />
+        <CategoriasTabla categorias={categorias} onEditar={abrirModal} onEliminar={handleDelete} />
       )}
 
       {modalAbierto && (
@@ -87,7 +81,9 @@ export const CategoriesPage = () => {
                 name="nombre"
                 validators={{
                   onChange: ({ value }) =>
-                    value.trim() ? undefined : 'El nombre no puede quedar vacío',
+                    value.trim().length >= 2 && value.length <= 100
+                      ? undefined
+                      : 'El nombre tiene que tener entre 2 y 100 caracteres',
                 }}
               >
                 {(field) => <CampoTexto field={field} label="Nombre de la categoría" />}

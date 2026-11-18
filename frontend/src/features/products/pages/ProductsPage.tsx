@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { useAuth } from '@/features/auth'
-import { useCategories } from '@/features/categories'
+import { useCategorias } from '@/features/categorias'
 import { CampoTexto } from '@/shared/components/CampoTexto'
 import { EstadoCarga } from '@/shared/components/EstadoCarga'
 import { EstadoError } from '@/shared/components/EstadoError'
@@ -23,7 +23,7 @@ const valoresVacios: ProductoForm = {
 export const ProductsPage = () => {
   const { esAdmin } = useAuth()
   const { productos, isPending, isError, refetch, guardar, eliminar } = useProducts()
-  const { categorias } = useCategories()
+  const { categorias } = useCategorias()
   const [modalAbierto, setModalAbierto] = useState(false)
   const [seleccionado, setSeleccionado] = useState<Producto | null>(null)
 

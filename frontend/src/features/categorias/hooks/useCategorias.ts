@@ -5,7 +5,7 @@ import {
   deleteCategoria,
   getCategorias,
   updateCategoria,
-} from '../services/categoria.service'
+} from '../api/categorias'
 import type { CategoriaForm } from '../types/categoria.types'
 
 interface GuardarCategoria {
@@ -13,7 +13,7 @@ interface GuardarCategoria {
   datos: CategoriaForm
 }
 
-export const useCategories = () => {
+export const useCategorias = () => {
   const queryClient = useQueryClient()
   const showNotification = useNotificationStore((state) => state.showNotification)
 

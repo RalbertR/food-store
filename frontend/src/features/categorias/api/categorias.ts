@@ -1,10 +1,9 @@
 import { api } from '@/shared/api/api'
-import type { Paginado } from '@/shared/types/paginado'
 import type { Categoria, CategoriaForm } from '../types/categoria.types'
 
 export const getCategorias = async (): Promise<Categoria[]> => {
-  const respuesta = await api.get<Paginado<Categoria>>('/categorias', { params: { limit: 100 } })
-  return respuesta.data.items
+  const respuesta = await api.get<Categoria[]>('/categorias')
+  return respuesta.data
 }
 
 export const createCategoria = async (datos: CategoriaForm): Promise<Categoria> => {

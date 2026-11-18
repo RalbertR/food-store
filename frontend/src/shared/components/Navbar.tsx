@@ -27,16 +27,18 @@ export const Navbar = ({ nombreApp }: NavbarProps) => {
         </span>
         {usuario && (
           <>
-            <Link to="/categories" className={estiloLink}>
-              Categorías
-            </Link>
             <Link to="/products" className={estiloLink}>
               Productos
             </Link>
             {esAdmin && (
-              <Link to="/admin/usuarios" className={estiloLink}>
-                Usuarios
-              </Link>
+              <>
+                <Link to="/admin/categorias" className={estiloLink}>
+                  Categorías
+                </Link>
+                <Link to="/admin/usuarios" className={estiloLink}>
+                  Usuarios
+                </Link>
+              </>
             )}
           </>
         )}

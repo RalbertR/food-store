@@ -1,10 +1,8 @@
 export interface Categoria {
   id: number
   nombre: string
-  descripcion: string
-  created_at: string
-  updated_at: string
-  deleted_at: string | null
+  descripcion: string | null
+  activo: boolean
 }
 
 export interface CategoriaForm {
