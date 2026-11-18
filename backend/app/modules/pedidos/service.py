@@ -7,6 +7,7 @@ from app.modules.pedidos.schemas import (
     PedidoCreate,
     PedidoRead,
     PedidosPaginados,
+    ResumenPedidos,
 )
 from app.modules.pedidos.unit_of_work import PedidoUnitOfWork
 from app.modules.productos.service import ProductoNoEncontrado
@@ -116,6 +117,18 @@ class PedidoService:
                 raise TransicionInvalida("Solo se puede cancelar un pedido PENDIENTE")
             self._aplicar_estado(uow, pedido, EstadoPedido.CANCELADO)
             return PedidoRead.model_validate(pedido)
+
+    def resumen(self) -> ResumenPedidos:
+        with self.uow as uow:
+            medianoche = datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0)
+            return ResumenPedidos(
+                pendientes=uow.pedidos.count_by_estado(EstadoPedido.PENDIENTE.value),
+                en_preparacion=uow.pedidos.count_by_estado(EstadoPedido.EN_PREPARACION.value),
+                entregados=uow.pedidos.count_by_estado(EstadoPedido.ENTREGADO.value),
+                cancelados=uow.pedidos.count_by_estado(EstadoPedido.CANCELADO.value),
+                pedidos_hoy=uow.pedidos.count_desde(medianoche.astimezone(timezone.utc)),
+                ingresos_entregados=uow.pedidos.sum_total_by_estado(EstadoPedido.ENTREGADO.value),
+            )
 
     def _buscar(self, uow: PedidoUnitOfWork, pedido_id: int, usuario: UserPublic) -> Pedido:
         pedido = uow.pedidos.get_by_id(pedido_id)

@@ -9,6 +9,7 @@ from app.modules.pedidos.schemas import (
     PedidoCreate,
     PedidoRead,
     PedidosPaginados,
+    ResumenPedidos,
 )
 from app.modules.pedidos.service import (
     PedidoAjeno,
@@ -53,6 +54,14 @@ def listar_pedidos(
     estado: EstadoPedido | None = None,
 ):
     return service.listar(usuario, skip, limit, estado)
+
+
+@router.get("/resumen", response_model=ResumenPedidos)
+def resumen_pedidos(
+    _admin: Annotated[UserPublic, Depends(require_role(["admin"]))],
+    service: Annotated[PedidoService, Depends(get_pedido_service)],
+):
+    return service.resumen()
 
 
 @router.get("/{pedido_id}", response_model=PedidoRead)
