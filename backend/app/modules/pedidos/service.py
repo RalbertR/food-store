@@ -1,8 +1,23 @@
+from datetime import datetime, timezone
+
 from app.modules.pedidos.models import DetallePedido, Pedido
-from app.modules.pedidos.schemas import EstadoPedido, PedidoCreate, PedidoRead, PedidosPaginados
+from app.modules.pedidos.schemas import (
+    CambioEstado,
+    EstadoPedido,
+    PedidoCreate,
+    PedidoRead,
+    PedidosPaginados,
+)
 from app.modules.pedidos.unit_of_work import PedidoUnitOfWork
 from app.modules.productos.service import ProductoNoEncontrado
 from app.modules.usuarios.schemas import UserPublic
+
+TRANSICIONES = {
+    EstadoPedido.PENDIENTE: [EstadoPedido.EN_PREPARACION, EstadoPedido.CANCELADO],
+    EstadoPedido.EN_PREPARACION: [EstadoPedido.ENTREGADO, EstadoPedido.CANCELADO],
+    EstadoPedido.ENTREGADO: [],
+    EstadoPedido.CANCELADO: [],
+}
 
 
 class PedidoNoEncontrado(Exception):
@@ -22,6 +37,10 @@ class ProductoNoDisponible(Exception):
 
 
 class StockInsuficiente(Exception):
+    pass
+
+
+class TransicionInvalida(Exception):
     pass
 
 
@@ -82,6 +101,22 @@ class PedidoService:
         with self.uow as uow:
             return PedidoRead.model_validate(self._buscar(uow, pedido_id, usuario))
 
+    def cambiar_estado(self, pedido_id: int, data: CambioEstado, usuario: UserPublic) -> PedidoRead:
+        with self.uow as uow:
+            pedido = self._buscar(uow, pedido_id, usuario)
+            self._aplicar_estado(uow, pedido, data.estado)
+            return PedidoRead.model_validate(pedido)
+
+    def cancelar(self, pedido_id: int, usuario: UserPublic) -> PedidoRead:
+        with self.uow as uow:
+            pedido = self._buscar(uow, pedido_id, usuario)
+            if pedido.usuario_id != usuario.id:
+                raise PedidoAjeno("El pedido es de otro usuario")
+            if pedido.estado != EstadoPedido.PENDIENTE:
+                raise TransicionInvalida("Solo se puede cancelar un pedido PENDIENTE")
+            self._aplicar_estado(uow, pedido, EstadoPedido.CANCELADO)
+            return PedidoRead.model_validate(pedido)
+
     def _buscar(self, uow: PedidoUnitOfWork, pedido_id: int, usuario: UserPublic) -> Pedido:
         pedido = uow.pedidos.get_by_id(pedido_id)
         if pedido is None:
@@ -89,3 +124,14 @@ class PedidoService:
         if usuario.role != "admin" and pedido.usuario_id != usuario.id:
             raise PedidoAjeno("El pedido es de otro usuario")
         return pedido
+
+    def _aplicar_estado(self, uow: PedidoUnitOfWork, pedido: Pedido, nuevo: EstadoPedido) -> None:
+        actual = EstadoPedido(pedido.estado)
+        if nuevo not in TRANSICIONES[actual]:
+            raise TransicionInvalida(f"No se puede pasar de {actual.value} a {nuevo.value}")
+        if nuevo == EstadoPedido.CANCELADO:
+            for item in pedido.items:
+                producto = uow.productos.get_by_id(item.producto_id)
+                producto.stock += item.cantidad
+        pedido.estado = nuevo.value
+        pedido.updated_at = datetime.now(timezone.utc)
