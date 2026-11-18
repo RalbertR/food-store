@@ -9,7 +9,7 @@ interface NavbarProps {
 }
 
 const estiloLink =
-  'text-sm font-semibold text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400'
+  'whitespace-nowrap text-sm font-semibold text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400'
 
 export const Navbar = ({ nombreApp }: NavbarProps) => {
   const { usuario, esAdmin, logout } = useAuth()
@@ -25,7 +25,7 @@ export const Navbar = ({ nombreApp }: NavbarProps) => {
 
   return (
     <header className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
-      <nav className="mx-auto flex h-16 max-w-4xl items-center gap-5 px-4">
+      <nav className="mx-auto flex h-16 max-w-6xl items-center gap-5 px-4">
         <span className="whitespace-nowrap text-lg font-bold text-blue-600 dark:text-blue-400">
           {nombreApp}
         </span>
@@ -44,6 +44,9 @@ export const Navbar = ({ nombreApp }: NavbarProps) => {
           <>
             <Link to="/admin/categorias" className={estiloLink}>
               Categorías
+            </Link>
+            <Link to="/admin/productos" className={estiloLink}>
+              Productos
             </Link>
             <Link to="/admin/usuarios" className={estiloLink}>
               Usuarios

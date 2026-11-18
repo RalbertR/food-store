@@ -4,9 +4,10 @@ interface CampoTextoProps {
   field: AnyFieldApi
   label: string
   type?: 'text' | 'number' | 'email' | 'password'
+  step?: string
 }
 
-export const CampoTexto = ({ field, label, type = 'text' }: CampoTextoProps) => {
+export const CampoTexto = ({ field, label, type = 'text', step = '0.01' }: CampoTextoProps) => {
   return (
     <div className="mb-4">
       <label
@@ -18,7 +19,7 @@ export const CampoTexto = ({ field, label, type = 'text' }: CampoTextoProps) => 
       <input
         id={field.name}
         type={type}
-        step={type === 'number' ? '0.01' : undefined}
+        step={type === 'number' ? step : undefined}
         value={field.state.value}
         onBlur={field.handleBlur}
         onChange={(e) =>
