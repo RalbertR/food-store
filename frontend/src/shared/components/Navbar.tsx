@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/features/auth'
+import { useCartStore } from '@/store/cartStore'
 import { useThemeStore } from '@/store/themeStore'
 
 interface NavbarProps {
@@ -14,6 +15,9 @@ export const Navbar = ({ nombreApp }: NavbarProps) => {
   const { usuario, esAdmin, logout } = useAuth()
   const darkMode = useThemeStore((state) => state.darkMode)
   const toggleTheme = useThemeStore((state) => state.toggleTheme)
+  const cantidadEnCarrito = useCartStore((state) =>
+    state.items.reduce((suma, item) => suma + item.cantidad, 0),
+  )
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode)
@@ -27,6 +31,9 @@ export const Navbar = ({ nombreApp }: NavbarProps) => {
         </span>
         <Link to="/" className={estiloLink}>
           Catálogo
+        </Link>
+        <Link to="/carrito" className={estiloLink}>
+          Carrito ({cantidadEnCarrito})
         </Link>
         {esAdmin && (
           <>

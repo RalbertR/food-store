@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { LoginPage, RegisterPage, UnauthorizedPage } from '@/features/auth'
 import { AdminCategoriasPage } from '@/features/categorias'
+import { CarritoPage } from '@/features/pedidos'
 import { CatalogoPage } from '@/features/productos'
 import { AdminUsuariosPage } from '@/features/usuarios'
 import { Navbar } from '@/shared/components/Navbar'
@@ -14,6 +15,7 @@ export const AppRouter = () => {
       <main className="mx-auto max-w-4xl px-4 py-8">
         <Routes>
           <Route path="/" element={<CatalogoPage />} />
+          <Route path="/carrito" element={<CarritoPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
