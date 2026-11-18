@@ -25,21 +25,17 @@ export const Navbar = ({ nombreApp }: NavbarProps) => {
         <span className="whitespace-nowrap text-lg font-bold text-blue-600 dark:text-blue-400">
           {nombreApp}
         </span>
-        {usuario && (
+        <Link to="/" className={estiloLink}>
+          Catálogo
+        </Link>
+        {esAdmin && (
           <>
-            <Link to="/products" className={estiloLink}>
-              Productos
+            <Link to="/admin/categorias" className={estiloLink}>
+              Categorías
             </Link>
-            {esAdmin && (
-              <>
-                <Link to="/admin/categorias" className={estiloLink}>
-                  Categorías
-                </Link>
-                <Link to="/admin/usuarios" className={estiloLink}>
-                  Usuarios
-                </Link>
-              </>
-            )}
+            <Link to="/admin/usuarios" className={estiloLink}>
+              Usuarios
+            </Link>
           </>
         )}
         <div className="ml-auto flex items-center gap-4">
@@ -60,7 +56,7 @@ export const Navbar = ({ nombreApp }: NavbarProps) => {
           >
             {darkMode ? '☀' : '☾'}
           </button>
-          {usuario && (
+          {usuario ? (
             <button
               type="button"
               onClick={logout}
@@ -68,6 +64,13 @@ export const Navbar = ({ nombreApp }: NavbarProps) => {
             >
               Cerrar sesión
             </button>
+          ) : (
+            <Link
+              to="/login"
+              className="whitespace-nowrap rounded-lg bg-blue-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-blue-600"
+            >
+              Ingresar
+            </Link>
           )}
         </div>
       </nav>
