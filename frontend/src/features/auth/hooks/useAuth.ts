@@ -15,7 +15,6 @@ export const useAuth = () => {
 
   const login = useMutation({
     mutationFn: (datos: LoginForm) => iniciar(datos.username, datos.password),
-    onSuccess: () => navigate('/'),
   })
 
   const registro = useMutation({

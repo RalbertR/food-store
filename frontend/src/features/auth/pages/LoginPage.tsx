@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form'
-import { Link, Navigate } from 'react-router-dom'
+import { Link, Navigate, useLocation } from 'react-router-dom'
 import { CampoTexto } from '@/shared/components/CampoTexto'
 import { useAuth } from '../hooks/useAuth'
 import type { LoginForm } from '../types/auth.types'
@@ -8,6 +8,8 @@ const valoresVacios: LoginForm = { username: '', password: '' }
 
 export const LoginPage = () => {
   const { usuario, login } = useAuth()
+  const location = useLocation()
+  const destino = (location.state as { from?: string } | null)?.from ?? '/'
 
   const form = useForm({
     defaultValues: valoresVacios,
@@ -16,7 +18,7 @@ export const LoginPage = () => {
     },
   })
 
-  if (usuario) return <Navigate to="/" replace />
+  if (usuario) return <Navigate to={destino} replace />
 
   return (
     <div className="mx-auto max-w-sm">
