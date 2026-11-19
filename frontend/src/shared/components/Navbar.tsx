@@ -42,11 +42,17 @@ export const Navbar = ({ nombreApp }: NavbarProps) => {
         )}
         {esAdmin && (
           <>
+            <Link to="/admin/resumen" className={estiloLink}>
+              Resumen
+            </Link>
             <Link to="/admin/categorias" className={estiloLink}>
               Categorías
             </Link>
             <Link to="/admin/productos" className={estiloLink}>
               Productos
+            </Link>
+            <Link to="/admin/pedidos" className={estiloLink}>
+              Pedidos
             </Link>
             <Link to="/admin/usuarios" className={estiloLink}>
               Usuarios
