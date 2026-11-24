@@ -3,7 +3,7 @@
 Trabajo Práctico Integrador de Programación 4. Es una tienda de comida donde los clientes recorren el catálogo, arman un carrito y confirman pedidos, y el administrador gestiona categorías, productos, stock, pedidos y usuarios desde su panel. El backend está hecho con FastAPI, SQLModel y PostgreSQL. El frontend usa React con TypeScript, Vite, Tailwind, TanStack Query, Form y Table, Zustand y Axios.
 
 - **Repositorio:** https://github.com/RalbertR/food-store
-- **Video de demostración:** pendiente
+- **Video de demostración:** https://youtu.be/rxPFiOeQ0rM
 
 ## Requisitos
 
