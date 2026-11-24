@@ -26,8 +26,17 @@ PRODUCTOS = [
 ]
 
 
-def imagen_de(nombre: str) -> str:
-    return f"https://placehold.co/400x300?text={nombre.replace(' ', '+')}"
+IMAGENES = {
+    "Pizza muzzarella": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Pizza_with_mozzarella_%28argentine_style%29.jpg/500px-Pizza_with_mozzarella_%28argentine_style%29.jpg",
+    "Pizza napolitana": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/Pizza_napolitana.JPG/500px-Pizza_napolitana.JPG",
+    "Pizza fugazzeta": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/Fugazzetta%2C_pizza_argentina_artesanal.jpg/500px-Fugazzetta%2C_pizza_argentina_artesanal.jpg",
+    "Empanada de carne": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/Empanada_mendocina_de_carne.jpg/500px-Empanada_mendocina_de_carne.jpg",
+    "Empanada de jamón y queso": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Empanadas_argentinas_de_jam%C3%B3n_y_queso_%28horneadas%29.jpg/500px-Empanadas_argentinas_de_jam%C3%B3n_y_queso_%28horneadas%29.jpg",
+    "Agua mineral 500 ml": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Blue_Waters_bottle_no_label.jpg/500px-Blue_Waters_bottle_no_label.jpg",
+    "Gaseosa cola 1,5 L": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Glass_cola.jpg/500px-Glass_cola.jpg",
+    "Flan casero": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/Flan_casero_con_dulce_de_leche.JPG/500px-Flan_casero_con_dulce_de_leche.JPG",
+    "Tiramisú": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/Tiramisu_at_Italian_restaurant_in_Japan.jpg/500px-Tiramisu_at_Italian_restaurant_in_Japan.jpg",
+}
 
 
 def cargar_admin(session: Session) -> None:
@@ -53,7 +62,10 @@ def cargar_categorias(session: Session) -> None:
 
 def cargar_productos(session: Session) -> None:
     for categoria_nombre, nombre, descripcion, precio, stock in PRODUCTOS:
-        if session.exec(select(Producto).where(Producto.nombre == nombre)).first():
+        existente = session.exec(select(Producto).where(Producto.nombre == nombre)).first()
+        if existente:
+            if existente.imagen_url is None or "placehold.co" in existente.imagen_url:
+                existente.imagen_url = IMAGENES[nombre]
             continue
         categoria = session.exec(select(Categoria).where(Categoria.nombre == categoria_nombre)).one()
         session.add(
@@ -62,7 +74,7 @@ def cargar_productos(session: Session) -> None:
                 nombre=nombre,
                 descripcion=descripcion,
                 precio_base=precio,
-                imagen_url=imagen_de(nombre),
+                imagen_url=IMAGENES[nombre],
                 stock=stock,
             )
         )
